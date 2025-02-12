@@ -5,3 +5,32 @@ eval_mae_xreg， 协变量回归预测平均绝对误差
 eval_mse_timesfm，timsfm模型预测均方误差
 eval_mse_xreg_timesfm，timesfm模型加协变量预测均方误差
 eval_mse_xreg，协变量回归预测均方误差
+
+
+LiChengQu
+
+mae_y_pred_timesfm: [[1.12456166]]
+mae_y_pred_xreg_timesfm: [[1.13344966]]
+mae_y_pred_xreg: [[2.4623695]]
+mse_y_pred_timesfm: [[5.18557864]]
+mse_y_pred_xreg_timesfm: [[5.43120751]]
+mse_y_pred_xreg: [[25.89242399]]
+
+
+Shibeiqu
+
+mae_y_pred_timesfm: [[0.87804083]]
+mae_y_pred_xreg_timesfm: [[0.79453737]]
+mae_y_pred_xreg: [[1.85645523]]
+mse_y_pred_timesfm: [[4.32271397]]
+mse_y_pred_xreg_timesfm: [[3.08710577]]
+mse_y_pred_xreg: [[24.7973827]]
+
+Chengyangqu
+
+mae_y_pred_timesfm: [[1.01105528]]
+mae_y_pred_xreg_timesfm: [[0.99629692]]
+mae_y_pred_xreg: [[2.17695387]]
+mse_y_pred_timesfm: [[5.100012]]
+mse_y_pred_xreg_timesfm: [[5.05645352]]
+mse_y_pred_xreg: [[26.65681589]]
