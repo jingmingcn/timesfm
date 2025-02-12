@@ -34,3 +34,14 @@ mae_y_pred_xreg: [[2.17695387]]
 mse_y_pred_timesfm: [[5.100012]]
 mse_y_pred_xreg_timesfm: [[5.05645352]]
 mse_y_pred_xreg: [[26.65681589]]
+
+
+
+LiChengQu 2020-01-01
+
+mae_y_pred_timesfm: [[1.53081123]]
+mae_y_pred_xreg_timesfm: [[1.46881461]]
+mae_y_pred_xreg: [[3.49220425]]
+mse_y_pred_timesfm: [[7.17074519]]
+mse_y_pred_xreg_timesfm: [[6.49118095]]
+mse_y_pred_xreg: [[40.9799861]]
