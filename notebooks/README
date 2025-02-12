@@ -1,0 +1,7 @@
+
+eval_mae_timesfm， timsfm模型预测平均绝对误差
+eval_mae_xreg_timesfm， timesfm模型加协变量预测平均绝对误差
+eval_mae_xreg， 协变量回归预测平均绝对误差
+eval_mse_timesfm，timsfm模型预测均方误差
+eval_mse_xreg_timesfm，timesfm模型加协变量预测均方误差
+eval_mse_xreg，协变量回归预测均方误差
