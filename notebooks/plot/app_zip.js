@@ -119,25 +119,33 @@ function updatePlot() {
                 label: '真实病例数',
                 data: filteredData.map(row => row.number_of_cases),
                 borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            },
-            {
-                label: 'TimesFM',
-                data: filteredData.map(row => row.raw_timesfm),
-                borderColor: 'rgb(255, 99, 132)',
-                tension: 0.1
+                tension: 0.1,
+                borderWidth: 2,
+                pointRadius: 2
             },
             {
                 label: 'TimesFM+协变量',
                 data: filteredData.map(row => row.cov_timesfm),
-                borderColor: 'rgb(54, 162, 235)',
-                tension: 0.1
+                borderColor: 'rgb(255, 99, 132)',
+                tension: 0.1,
+                borderWidth: 2,
+                pointRadius: 2
+            },
+            {
+                label: 'TimesFM',
+                data: filteredData.map(row => row.raw_timesfm),
+                borderColor: 'rgb(153, 102, 255)',
+                tension: 0.1,
+                borderWidth: 2,
+                pointRadius: 2
             },
             {
                 label: '协变量',
                 data: filteredData.map(row => row.ols_timesfm),
-                borderColor: 'rgb(153, 102, 255)',
-                tension: 0.1
+                borderColor: 'rgb(54, 162, 235)',
+                tension: 0.1,
+                borderWidth: 2,
+                pointRadius: 2
             }
         ]
     };
