@@ -1,5 +1,6 @@
 let chart;
 let data;
+let mapData;
 
 // Default values
 const DEFAULT_DISEASE = '发热伴';
@@ -77,6 +78,92 @@ async function loadData() {
     updatePlot();
 }
 
+async function initializeMaps() {
+    // Load GeoJSON data
+    const response = await fetch('map_sd_county.geojson');
+    const geoJson = await response.json();
+    // Register GeoJSON data
+    echarts.registerMap('county', geoJson);
+    
+
+    // Initialize maps
+    const mapOptions = {
+        // number_of_cases: { title: 'Number of Cases', div: 'map1' },
+        raw_timesfm: { title: 'Raw TimesFM', div: 'map2' },
+        // cov_timesfm: { title: 'COV TimesFM', div: 'map3' },
+        // ols_timesfm: { title: 'OLS TimesFM', div: 'map4' },
+        
+    };
+
+    const maps = {};
+    for (const [key, config] of Object.entries(mapOptions)) {
+        maps[key] = echarts.init(document.getElementById(config.div));
+    }
+
+    function updateMaps(filteredMapData) {
+        console.log(filteredMapData);
+        for (const [key, config] of Object.entries(mapOptions)) {
+            const option = {
+                title: {
+                    text: config.title,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}'
+                },
+                visualMap: {
+                    min: Math.min(...filteredMapData.map(item => item[key])),
+                    max: Math.max(...filteredMapData.map(item => item[key])),
+                    left: 'left',
+                    top: 'bottom',
+                    text: ['High', 'Low'],
+                    realtime: false,
+                    calculable: true,
+                    inRange: {
+                        color: [
+                        //   '#313695',
+                        //   '#4575b4',
+                        //   '#74add1',
+                        //   '#abd9e9',
+                        //   '#e0f3f8',
+                          '#ffffbf',
+                          '#fee090',
+                          '#fdae61',
+                          '#f46d43',
+                          '#d73027',
+                          '#a50026'
+                        ]
+                      },
+                },
+                series: [{
+                    name: config.title,
+                    type: 'map',
+                    map: 'county',
+                    roam: false,
+                    center: [118.0, 36.65],
+                    zoom: 1,
+                    label: {
+                        show: false
+                      },
+                    data: filteredMapData.map(item => ({
+                        name: item.county,
+                        value: item[key]
+                    }))
+                }]
+            };
+            maps[key].setOption(option);
+        }
+    }
+
+    // Add maps to window resize event
+    window.addEventListener('resize', () => {
+        Object.values(maps).forEach(map => map.resize());
+    });
+
+    return updateMaps;
+}
+
 function filterData(disease, county) {
     const startDate = new Date(document.getElementById('startDate').value);
     const endDate = new Date(document.getElementById('endDate').value);
@@ -89,39 +176,61 @@ function filterData(disease, county) {
     );
 }
 
-function updatePlot() {
+function filterMapData(disease) {
+    const startDate = new Date(document.getElementById('startDate').value);
+    const endDate = new Date(document.getElementById('endDate').value);
+    const data_ =  data.filter(row => 
+        row.disease === disease && 
+        row.onset_date >= startDate &&
+        row.onset_date <= endDate
+    );
+
+    const groupedData = _.groupBy(data_, 'county');
+    return _.map(groupedData, (value, key) => {
+        return {
+            county: key,
+            number_of_cases: _.sumBy(value, 'number_of_cases'),
+            raw_timesfm: _.sumBy(value, 'raw_timesfm'),
+            cov_timesfm: _.sumBy(value, 'cov_timesfm'),
+            ols_timesfm: _.sumBy(value, 'ols_timesfm')
+        };
+    });
+}
+
+async function updatePlot() {
     const disease = document.getElementById('diseaseSelect').value;
     const county = document.getElementById('countySelect').value;
     
     const filteredData = filterData(disease, county);
+    const filteredMapData = filterMapData(disease);
 
     const chartData = {
         labels: filteredData.map(row => row.onset_date),
         datasets: [
-            {
-                label: '真实病例数',
-                data: filteredData.map(row => row.number_of_cases),
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            },
+            // {
+            //     label: '真实病例数',
+            //     data: filteredData.map(row => row.number_of_cases),
+            //     borderColor: 'rgb(75, 192, 192)',
+            //     tension: 0.1
+            // },
             {
                 label: 'TimesFM',
                 data: filteredData.map(row => row.raw_timesfm),
                 borderColor: 'rgb(255, 99, 132)',
                 tension: 0.1
             },
-            {
-                label: 'TimesFM+协变量',
-                data: filteredData.map(row => row.cov_timesfm),
-                borderColor: 'rgb(54, 162, 235)',
-                tension: 0.1
-            },
-            {
-                label: '协变量',
-                data: filteredData.map(row => row.ols_timesfm),
-                borderColor: 'rgb(153, 102, 255)',
-                tension: 0.1
-            }
+            // {
+            //     label: 'TimesFM+协变量',
+            //     data: filteredData.map(row => row.cov_timesfm),
+            //     borderColor: 'rgb(54, 162, 235)',
+            //     tension: 0.1
+            // },
+            // {
+            //     label: '协变量',
+            //     data: filteredData.map(row => row.ols_timesfm),
+            //     borderColor: 'rgb(153, 102, 255)',
+            //     tension: 0.1
+            // }
         ]
     };
 
@@ -134,6 +243,7 @@ function updatePlot() {
         data: chartData,
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 x: {
                     type: 'time',
@@ -154,6 +264,12 @@ function updatePlot() {
             }
         }
     });
+
+    // Update maps
+    if (!window.updateMaps) {
+        window.updateMaps = await initializeMaps();
+    }
+    window.updateMaps(filteredMapData);
 }
 
 // Event listeners
