@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coze Agent App</title>
+    <style>
+/* 基础样式：设置页面整体布局 */
+html, body {
+  height: 100%; /* 让页面高度占满整个浏览器窗口，避免出现垂直滚动空白 */
+  margin: 0;    /* 清除浏览器默认的外边距，消除页面边缘的空白间隙 */
+}
+
+#app {
+  height: 100%;          /* 让应用容器高度占满整个页面，确保内容区域充满可用空间 */
+  box-sizing: border-box; /* 盒模型规则：容器的宽高会包含内容、内边距和边框，避免添加样式后整体尺寸变大 */
+  padding: 8px;          /* 为容器内部内容添加8px内边距，避免内容紧贴边缘 */
+}
+
+/* 自定义Web SDK iframe的样式（类名与JS中ui.className保持一致） */
+.coze-app-sdk {
+  box-sizing: border-box; /* 盒模型规则：iframe的宽高会包含内容、内边距和边框，避免添加样式后整体尺寸变大 */
+  padding: 4px;          /* 为iframe内部内容添加4px内边距，避免内容紧贴边缘 */
+}
+
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+<script type="text/javascript">
+  var webSdkScript = document.createElement('script');
+  webSdkScript.src = 'https://lf-cdn.coze.cn/obj/unpkg/flow-platform/builder-web-sdk/0.1.1-beta.1/dist/umd/index.js';
+  document.head.appendChild(webSdkScript);
+  webSdkScript.onload = function () {
+    new CozeWebSDK.AppWebSDK({
+      "token": "pat_RLdA5zxNjPCW893IKcqs3hLOD6WuCdaewsubjuB5M3kW45u4QszjkV6qT0u3Fras",
+      "appId": "7563657011217809442",
+      "container": "#app",
+      "userInfo": {
+        "id": "",
+        "url": "",
+        "nickname": "User"
+      }
+    });
+  }
+</script>
+</body>
+</html>
